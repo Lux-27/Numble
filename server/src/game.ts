@@ -3,7 +3,7 @@ import { GameState, GamePhase, Player, GuessResult, GuessEntry, PublicPlayer, Ga
 export class Game {
   public state: GameState;
 
-  constructor(gameId: string) {
+  constructor(gameId: string, timerSeconds?: number) {
     this.state = {
       id: gameId,
       phase: "waiting-for-players",
@@ -11,6 +11,8 @@ export class Game {
       round: 1,
       winnerId: null,
       createdAt: Date.now(),
+      timerSeconds: timerSeconds && timerSeconds >= 10 && timerSeconds <= 120 ? timerSeconds : null,
+      roundDeadline: null,
     };
   }
 
@@ -50,6 +52,7 @@ export class Game {
     if (allSet) {
       this.state.phase = "playing";
       this.state.round = 1;
+      this.startRoundDeadline();
     }
 
     return true;
@@ -107,17 +110,41 @@ export class Game {
     if (gameOver) {
       this.state.phase = "game-over";
       this.state.winnerId = isTie ? null : winners[0];
+      this.state.roundDeadline = null;
     } else {
       this.state.round++;
+      this.startRoundDeadline();
     }
 
     return { results, gameOver, winnerId: this.state.winnerId, isTie };
+  }
+
+  startRoundDeadline(): void {
+    if (this.state.timerSeconds) {
+      this.state.roundDeadline = Date.now() + this.state.timerSeconds * 1000;
+    } else {
+      this.state.roundDeadline = null;
+    }
+  }
+
+  autoSubmitForPlayer(socketId: string): boolean {
+    const player = this.state.players.get(socketId);
+    if (!player || player.currentGuess) return false;
+
+    let guess = "";
+    for (let i = 0; i < 4; i++) {
+      guess += Math.floor(Math.random() * 10).toString();
+    }
+
+    player.currentGuess = guess;
+    return true;
   }
 
   resetForRematch(): void {
     this.state.phase = "setting-secrets";
     this.state.round = 1;
     this.state.winnerId = null;
+    this.state.roundDeadline = null;
 
     for (const player of this.state.players.values()) {
       player.secretNumber = undefined;
@@ -166,10 +193,13 @@ export class Game {
         guesses: player.guesses,
         hasSetSecret: !!player.secretNumber,
         hasGuessedThisRound: !!player.currentGuess,
+        secretNumber: player.secretNumber ?? null,
       },
       opponent: opponent ? this.getPublicPlayer(opponent.id) : null,
       winnerId: this.state.winnerId,
       isTie: this.state.winnerId === null && this.state.phase === "game-over",
+      timerSeconds: this.state.timerSeconds,
+      roundDeadline: this.state.roundDeadline,
     };
   }
 

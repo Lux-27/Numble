@@ -73,7 +73,7 @@ export function SecretNumberInput({ onSubmit, disabled }: SecretNumberInputProps
             onChange={(e) => handleChange(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
             disabled={disabled}
-            className="w-16 h-20 text-center text-3xl font-bold bg-input-bg border-2 border-border rounded-xl text-text-primary focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 transition-all disabled:opacity-50"
+            className="w-14 h-16 sm:w-16 sm:h-20 text-center text-2xl sm:text-3xl font-bold bg-input-bg border-2 border-border rounded-xl text-text-primary focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 transition-all disabled:opacity-50"
           />
         ))}
       </div>

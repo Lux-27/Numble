@@ -9,9 +9,10 @@ interface PlayerSetupProps {
   subtitle: string;
   onSubmit: (name: string, icon: IconName) => void;
   submitLabel: string;
+  children?: React.ReactNode;
 }
 
-export function PlayerSetup({ title, subtitle, onSubmit, submitLabel }: PlayerSetupProps) {
+export function PlayerSetup({ title, subtitle, onSubmit, submitLabel, children }: PlayerSetupProps) {
   const [name, setName] = useState("");
   const [icon, setIcon] = useState<IconName | null>(null);
 
@@ -52,6 +53,8 @@ export function PlayerSetup({ title, subtitle, onSubmit, submitLabel }: PlayerSe
         </label>
         <IconPicker selected={icon} onSelect={setIcon} />
       </div>
+
+      {children}
 
       <button
         type="submit"

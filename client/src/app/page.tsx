@@ -6,7 +6,7 @@ import { useGame } from "@/lib/useGame";
 import { PlayerSetup } from "@/components/PlayerSetup";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { IconName } from "@/lib/icons";
-import { Hash, Users, ArrowRight } from "lucide-react";
+import { Hash, Users, ArrowRight, Timer } from "lucide-react";
 
 type Mode = "home" | "create" | "join";
 
@@ -14,11 +14,13 @@ export default function HomePage() {
   const [mode, setMode] = useState<Mode>("home");
   const [joinCode, setJoinCode] = useState("");
   const [joinStep, setJoinStep] = useState<"code" | "setup">("code");
+  const [timerEnabled, setTimerEnabled] = useState(false);
+  const [timerSeconds, setTimerSeconds] = useState(30);
   const router = useRouter();
   const { createGame, joinGame } = useGame();
 
   async function handleCreate(name: string, icon: IconName) {
-    const gameId = await createGame(name, icon);
+    const gameId = await createGame(name, icon, timerEnabled ? timerSeconds : undefined);
     router.push(`/game/${gameId}`);
   }
 
@@ -52,7 +54,47 @@ export default function HomePage() {
             subtitle="Set up your profile and share the link with a friend"
             onSubmit={handleCreate}
             submitLabel="Create Game"
-          />
+          >
+            <div className="space-y-3 p-4 bg-input-bg rounded-xl border border-border">
+              <label className="flex items-center justify-between cursor-pointer">
+                <div className="flex items-center gap-2">
+                  <Timer size={16} className="text-text-secondary" />
+                  <span className="text-sm font-medium text-text-primary">Round Timer</span>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={timerEnabled}
+                  onClick={() => setTimerEnabled((v) => !v)}
+                  className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer ${
+                    timerEnabled ? "bg-violet-600" : "bg-surface-tertiary"
+                  }`}
+                >
+                  <span
+                    className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
+                      timerEnabled ? "translate-x-5" : "translate-x-0"
+                    }`}
+                  />
+                </button>
+              </label>
+              {timerEnabled && (
+                <div className="flex items-center gap-3 pt-1">
+                  <input
+                    type="number"
+                    min={10}
+                    max={120}
+                    value={timerSeconds}
+                    onChange={(e) => {
+                      const v = parseInt(e.target.value, 10);
+                      if (!isNaN(v)) setTimerSeconds(Math.min(120, Math.max(10, v)));
+                    }}
+                    className="w-20 px-3 py-2 bg-surface border border-border rounded-lg text-text-primary text-sm text-center focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  />
+                  <span className="text-sm text-text-secondary">seconds per round</span>
+                </div>
+              )}
+            </div>
+          </PlayerSetup>
         </div>
       </main>
     );
@@ -132,7 +174,7 @@ export default function HomePage() {
               <Hash size={28} className="text-white" />
             </div>
           </div>
-          <h1 className="text-5xl font-bold text-text-primary tracking-tight">
+          <h1 className="text-3xl sm:text-5xl font-bold text-text-primary tracking-tight">
             Numble
           </h1>
           <p className="text-text-secondary text-lg max-w-sm mx-auto">

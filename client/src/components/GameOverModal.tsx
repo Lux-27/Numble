@@ -16,7 +16,7 @@ export function GameOverModal({ data, yourId, onRematch }: GameOverModalProps) {
 
   return (
     <div className="fixed inset-0 bg-surface-overlay backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-surface-secondary border border-border rounded-2xl p-8 max-w-md w-full space-y-6 animate-in fade-in zoom-in duration-300">
+      <div className="bg-surface-secondary border border-border rounded-2xl p-4 sm:p-8 max-w-md w-full space-y-6 animate-in fade-in zoom-in duration-300 max-h-[90vh] overflow-y-auto">
         <div className="text-center space-y-3">
           {isTie ? (
             <>

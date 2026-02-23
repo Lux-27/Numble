@@ -22,6 +22,87 @@ const io = new Server(httpServer, {
 
 const games = new Map<string, Game>();
 const socketToGame = new Map<string, string>();
+const roundTimers = new Map<string, NodeJS.Timeout>();
+const nudgeIntervals = new Map<string, NodeJS.Timeout>();
+
+function clearNudgeInterval(gameId: string): void {
+  const interval = nudgeIntervals.get(gameId);
+  if (interval) {
+    clearInterval(interval);
+    nudgeIntervals.delete(gameId);
+  }
+}
+
+function startNudgeInterval(gameId: string, targetSocketId: string, fromPlayerName: string): void {
+  clearNudgeInterval(gameId);
+  const interval = setInterval(() => {
+    const game = games.get(gameId);
+    if (!game || game.state.phase !== "playing") {
+      clearNudgeInterval(gameId);
+      return;
+    }
+    const targetPlayer = game.state.players.get(targetSocketId);
+    if (!targetPlayer || targetPlayer.currentGuess) {
+      clearNudgeInterval(gameId);
+      return;
+    }
+    io.to(targetSocketId).emit("nudge", { from: fromPlayerName });
+  }, 10000);
+  nudgeIntervals.set(gameId, interval);
+}
+
+function clearRoundTimer(gameId: string): void {
+  const timer = roundTimers.get(gameId);
+  if (timer) {
+    clearTimeout(timer);
+    roundTimers.delete(gameId);
+  }
+}
+
+function startRoundTimer(gameId: string): void {
+  clearRoundTimer(gameId);
+  const game = games.get(gameId);
+  if (!game || !game.state.timerSeconds) return;
+
+  const timer = setTimeout(() => {
+    roundTimers.delete(gameId);
+    clearNudgeInterval(gameId);
+    const g = games.get(gameId);
+    if (!g || g.state.phase !== "playing") return;
+
+    for (const [playerId] of g.state.players) {
+      g.autoSubmitForPlayer(playerId);
+    }
+
+    const { results, gameOver } = g.resolveRound();
+
+    for (const [playerId, entry] of results) {
+      const opponent = g.getOpponent(playerId);
+      io.to(playerId).emit("round-result", {
+        guess: entry.guess,
+        bulls: entry.bulls,
+        cows: entry.cows,
+        round: entry.round,
+        opponent: opponent ? g.getPublicPlayer(opponent.id) : null,
+      });
+    }
+
+    if (gameOver) {
+      io.to(gameId).emit("game-over", g.getGameOverPayload());
+    } else {
+      startRoundTimer(gameId);
+    }
+
+    for (const playerId of g.state.players.keys()) {
+      const state = g.getGameStateForPlayer(playerId);
+      if (state) {
+        io.to(playerId).emit("game-state", state);
+      }
+    }
+  }, game.state.timerSeconds * 1000);
+
+  roundTimers.set(gameId, timer);
+}
 
 function cleanupStaleGames(): void {
   const oneHourAgo = Date.now() - 60 * 60 * 1000;
@@ -41,9 +122,9 @@ app.get("/health", (_req, res) => {
 io.on("connection", (socket) => {
   console.log(`Player connected: ${socket.id}`);
 
-  socket.on("create-game", ({ name, icon }: { name: string; icon: string }) => {
+  socket.on("create-game", ({ name, icon, timerSeconds }: { name: string; icon: string; timerSeconds?: number }) => {
     const gameId = nanoid(8);
-    const game = new Game(gameId);
+    const game = new Game(gameId, timerSeconds ?? undefined);
 
     if (!game.addPlayer(socket.id, name, icon)) {
       socket.emit("error", { message: "Failed to create game" });
@@ -111,6 +192,7 @@ io.on("connection", (socket) => {
 
     if (game.state.phase === "playing") {
       io.to(gameId).emit("game-start", { round: game.state.round });
+      startRoundTimer(gameId);
     }
   });
 
@@ -136,11 +218,17 @@ io.on("connection", (socket) => {
         if (oppState) {
           io.to(opponent.id).emit("game-state", oppState);
         }
+        const submitter = game.state.players.get(socket.id);
+        if (submitter) {
+          startNudgeInterval(gameId, opponent.id, submitter.name);
+        }
       }
       return;
     }
 
-    const { results, gameOver, winnerId, isTie } = game.resolveRound();
+    clearRoundTimer(gameId);
+    clearNudgeInterval(gameId);
+    const { results, gameOver } = game.resolveRound();
 
     for (const [playerId, entry] of results) {
       const opponent = game.getOpponent(playerId);
@@ -155,6 +243,8 @@ io.on("connection", (socket) => {
 
     if (gameOver) {
       io.to(gameId).emit("game-over", game.getGameOverPayload());
+    } else {
+      startRoundTimer(gameId);
     }
 
     for (const playerId of game.state.players.keys()) {
@@ -174,6 +264,8 @@ io.on("connection", (socket) => {
 
     if (game.state.phase !== "game-over") return;
 
+    clearRoundTimer(gameId);
+    clearNudgeInterval(gameId);
     game.resetForRematch();
 
     for (const playerId of game.state.players.keys()) {
@@ -217,6 +309,8 @@ io.on("connection", (socket) => {
       }
 
       if (game.state.players.size === 0) {
+        clearRoundTimer(gameId);
+        clearNudgeInterval(gameId);
         games.delete(gameId);
       }
     }

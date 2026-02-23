@@ -33,6 +33,8 @@ export interface GameState {
   round: number;
   winnerId: string | null;
   createdAt: number;
+  timerSeconds: number | null;
+  roundDeadline: number | null;
 }
 
 export interface PublicPlayer {
@@ -73,8 +75,11 @@ export interface GameStatePayload {
     guesses: GuessEntry[];
     hasSetSecret: boolean;
     hasGuessedThisRound: boolean;
+    secretNumber: string | null;
   };
   opponent: PublicPlayer | null;
   winnerId: string | null;
   isTie: boolean;
+  timerSeconds: number | null;
+  roundDeadline: number | null;
 }

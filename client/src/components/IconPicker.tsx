@@ -26,7 +26,7 @@ export function DynamicIcon({
 
 export function IconPicker({ selected, onSelect }: IconPickerProps) {
   return (
-    <div className="grid grid-cols-6 gap-2">
+    <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
       {AVAILABLE_ICONS.map((iconName) => (
         <button
           key={iconName}

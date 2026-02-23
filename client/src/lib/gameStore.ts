@@ -9,6 +9,7 @@ interface GameStore {
   gameOver: GameOverPayload | null;
   error: string | null;
   waitingForOpponent: boolean;
+  nudgeFrom: string | null;
 }
 
 let store: GameStore = {
@@ -16,6 +17,7 @@ let store: GameStore = {
   gameOver: null,
   error: null,
   waitingForOpponent: false,
+  nudgeFrom: null,
 };
 
 const listeners = new Set<Listener>();
@@ -40,6 +42,7 @@ export function resetStore(): void {
     gameOver: null,
     error: null,
     waitingForOpponent: false,
+    nudgeFrom: null,
   };
   listeners.forEach((l) => l());
 }

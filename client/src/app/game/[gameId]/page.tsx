@@ -9,6 +9,7 @@ import { GuessHistory, GuessLegend } from "@/components/GuessHistory";
 import { GameOverModal } from "@/components/GameOverModal";
 import { DynamicIcon } from "@/components/IconPicker";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Notepad } from "@/components/Notepad";
 import { IconName } from "@/lib/icons";
 import {
   Copy,
@@ -18,6 +19,10 @@ import {
   Hash,
   Shield,
   Swords,
+  Notebook,
+  Timer,
+  Lock,
+  Bell,
 } from "lucide-react";
 
 export default function GamePage({
@@ -32,6 +37,7 @@ export default function GamePage({
     error,
     connected,
     waitingForOpponent,
+    nudgeFrom,
     joinGame,
     setSecret,
     submitGuess,
@@ -41,6 +47,7 @@ export default function GamePage({
 
   const [copied, setCopied] = useState(false);
   const [hasJoined, setHasJoined] = useState(false);
+  const [notepadOpen, setNotepadOpen] = useState(false);
 
   useEffect(() => {
     if (connected) {
@@ -109,40 +116,54 @@ export default function GamePage({
   }
 
   return (
-    <main className="min-h-screen bg-surface">
+    <main className="min-h-screen bg-surface overflow-x-hidden">
       {error && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg text-sm animate-in fade-in slide-in-from-top duration-300">
           {error}
         </div>
       )}
 
+      {nudgeFrom && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-3 bg-amber-500/20 border border-amber-500/30 text-amber-600 dark:text-amber-300 rounded-lg text-sm animate-in fade-in slide-in-from-top duration-300 flex items-center gap-2">
+          <Bell size={16} className="animate-bounce" />
+          <span><strong>{nudgeFrom}</strong> is waiting for you!</span>
+        </div>
+      )}
+
       <div className="max-w-2xl mx-auto p-4 space-y-6">
-        <header className="flex items-center justify-between py-2">
+        <header className="flex items-center justify-between py-2 flex-wrap gap-2">
           <div className="flex items-center gap-2">
             <Hash size={20} className="text-violet-400" />
             <span className="text-text-primary font-bold text-lg">Numble</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
+            <button
+              onClick={() => setNotepadOpen((v) => !v)}
+              className="w-9 h-9 flex items-center justify-center rounded-lg bg-input-bg hover:bg-surface-tertiary border border-border transition-all cursor-pointer"
+              title="Scratch pad"
+            >
+              <Notebook size={16} className="text-text-secondary" />
+            </button>
             <ThemeToggle />
             {gameState.opponent && (
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-input-bg rounded-lg">
+              <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 bg-input-bg rounded-lg">
                 <DynamicIcon
                   name={gameState.opponent.icon}
                   size={16}
                   className="text-text-secondary"
                 />
-                <span className="text-text-secondary text-sm">
+                <span className="text-text-secondary text-sm hidden sm:inline">
                   {gameState.opponent.name}
                 </span>
               </div>
             )}
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-violet-500/10 border border-violet-500/20 rounded-lg">
+            <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 bg-violet-500/10 border border-violet-500/20 rounded-lg">
               <DynamicIcon
                 name={gameState.you.icon}
                 size={16}
                 className="text-violet-400"
               />
-              <span className="text-violet-300 text-sm">
+              <span className="text-violet-300 text-sm hidden sm:inline">
                 {gameState.you.name}
               </span>
             </div>
@@ -191,6 +212,13 @@ export default function GamePage({
               </button>
             </div>
 
+            {gameState.timerSeconds && (
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-violet-500/10 border border-violet-500/20 rounded-lg text-sm text-violet-400">
+                <Timer size={14} />
+                <span>{gameState.timerSeconds}s per round</span>
+              </div>
+            )}
+
             <Loader2 size={24} className="text-text-muted animate-spin" />
           </div>
         )}
@@ -222,13 +250,32 @@ export default function GamePage({
         {/* Playing */}
         {gameState.phase === "playing" && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between p-3 bg-input-bg rounded-xl border border-border">
+            {gameState.you.secretNumber && (
+              <div className="flex items-center justify-center gap-3 p-2.5 bg-violet-500/10 border border-violet-500/20 rounded-xl">
+                <div className="flex items-center gap-1.5 text-xs text-violet-400">
+                  <Lock size={12} />
+                  <span className="font-medium">Your number</span>
+                </div>
+                <div className="flex gap-1">
+                  {gameState.you.secretNumber.split("").map((d, i) => (
+                    <span
+                      key={i}
+                      className="w-7 h-7 flex items-center justify-center text-sm font-bold rounded bg-violet-500/20 text-violet-300"
+                    >
+                      {d}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-input-bg rounded-xl border border-border gap-2">
               <div className="flex items-center gap-2">
                 <Swords size={16} className="text-violet-400" />
                 <span className="text-sm text-text-secondary">Round {gameState.round}</span>
               </div>
               {gameState.opponent && (
-                <div className="flex items-center gap-2 text-sm">
+                <div className="flex items-center gap-2 text-sm flex-wrap">
                   <DynamicIcon
                     name={gameState.opponent.icon}
                     size={14}
@@ -263,6 +310,8 @@ export default function GamePage({
               <GuessInput
                 onSubmit={submitGuess}
                 round={gameState.round}
+                deadline={gameState.roundDeadline}
+                timerSeconds={gameState.timerSeconds}
               />
             )}
 
@@ -286,6 +335,8 @@ export default function GamePage({
           />
         )}
       </div>
+
+      <Notepad gameId={gameId} open={notepadOpen} onClose={() => setNotepadOpen(false)} />
     </main>
   );
 }

@@ -41,7 +41,7 @@ export function GuessHistory({ guesses }: GuessHistoryProps) {
               {entry.guess.split("").map((digit, di) => (
                 <span
                   key={di}
-                  className="w-10 h-10 flex items-center justify-center text-lg font-bold rounded-md bg-digit-bg text-text-primary"
+                  className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-base sm:text-lg font-bold rounded-md bg-digit-bg text-text-primary"
                 >
                   {digit}
                 </span>
