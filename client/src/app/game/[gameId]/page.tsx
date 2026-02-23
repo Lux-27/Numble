@@ -1,6 +1,7 @@
 "use client";
 
 import { use, useState, useEffect } from "react";
+import Link from "next/link";
 import { useGame } from "@/lib/useGame";
 import { PlayerSetup } from "@/components/PlayerSetup";
 import { SecretNumberInput } from "@/components/SecretNumberInput";
@@ -23,6 +24,9 @@ import {
   Timer,
   Lock,
   Bell,
+  AlertTriangle,
+  ArrowLeft,
+  Heart,
 } from "lucide-react";
 
 export default function GamePage({
@@ -79,7 +83,7 @@ export default function GamePage({
     return (
       <main className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center space-y-4">
-          <Loader2 size={32} className="text-violet-400 animate-spin mx-auto" />
+          <Loader2 size={32} className="text-accent-fg animate-spin mx-auto" />
           <p className="text-text-secondary">Connecting to server...</p>
         </div>
       </main>
@@ -105,10 +109,33 @@ export default function GamePage({
   }
 
   if (!gameState) {
+    if (hasJoined && error) {
+      return (
+        <main className="min-h-screen bg-surface flex items-center justify-center p-4">
+          <div className="text-center space-y-6 max-w-sm">
+            <AlertTriangle size={48} className="text-amber-400 mx-auto" />
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold text-text-primary">Game Not Found</h2>
+              <p className="text-text-secondary">
+                This game no longer exists. The host may have left or the room expired.
+              </p>
+            </div>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 py-3 px-6 bg-accent hover:bg-accent-hover text-white font-semibold rounded-xl transition-all cursor-pointer"
+            >
+              <ArrowLeft size={18} />
+              Back to Home
+            </Link>
+          </div>
+        </main>
+      );
+    }
+
     return (
       <main className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center space-y-4">
-          <Loader2 size={32} className="text-violet-400 animate-spin mx-auto" />
+          <Loader2 size={32} className="text-accent-fg animate-spin mx-auto" />
           <p className="text-text-secondary">Loading game...</p>
         </div>
       </main>
@@ -124,7 +151,7 @@ export default function GamePage({
       )}
 
       {nudgeFrom && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-3 bg-amber-500/20 border border-amber-500/30 text-amber-600 dark:text-amber-300 rounded-lg text-sm animate-in fade-in slide-in-from-top duration-300 flex items-center gap-2">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-3 bg-amber-500 dark:bg-amber-600 border border-amber-600 dark:border-amber-500 text-amber-950 dark:text-amber-100 rounded-lg text-sm animate-in fade-in slide-in-from-top duration-300 flex items-center gap-2 shadow-lg">
           <Bell size={16} className="animate-bounce" />
           <span><strong>{nudgeFrom}</strong> is waiting for you!</span>
         </div>
@@ -132,10 +159,10 @@ export default function GamePage({
 
       <div className="max-w-2xl mx-auto p-4 space-y-6">
         <header className="flex items-center justify-between py-2 flex-wrap gap-2">
-          <div className="flex items-center gap-2">
-            <Hash size={20} className="text-violet-400" />
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <Hash size={20} className="text-accent-fg" />
             <span className="text-text-primary font-bold text-lg">Numble</span>
-          </div>
+          </Link>
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
             <button
               onClick={() => setNotepadOpen((v) => !v)}
@@ -157,13 +184,13 @@ export default function GamePage({
                 </span>
               </div>
             )}
-            <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 bg-violet-500/10 border border-violet-500/20 rounded-lg">
+            <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 bg-accent-surface border border-accent-border rounded-lg">
               <DynamicIcon
                 name={gameState.you.icon}
                 size={16}
-                className="text-violet-400"
+                className="text-accent-fg"
               />
-              <span className="text-violet-300 text-sm hidden sm:inline">
+              <span className="text-accent-soft text-sm hidden sm:inline">
                 {gameState.you.name}
               </span>
             </div>
@@ -174,7 +201,7 @@ export default function GamePage({
         {gameState.phase === "waiting-for-players" && (
           <div className="flex flex-col items-center justify-center py-16 space-y-8">
             <div className="space-y-3 text-center">
-              <Users size={48} className="text-violet-400 mx-auto" />
+              <Users size={48} className="text-accent-fg mx-auto" />
               <h2 className="text-2xl font-bold text-text-primary">
                 Waiting for opponent...
               </h2>
@@ -198,7 +225,7 @@ export default function GamePage({
 
               <button
                 onClick={handleCopyLink}
-                className="w-full py-3 px-4 bg-violet-600 hover:bg-violet-500 text-white font-medium rounded-xl transition-all flex items-center justify-center gap-2 text-sm cursor-pointer"
+                className="w-full py-3 px-4 bg-accent hover:bg-accent-hover text-white font-medium rounded-xl transition-all flex items-center justify-center gap-2 text-sm cursor-pointer"
               >
                 {copied ? (
                   <>
@@ -213,7 +240,7 @@ export default function GamePage({
             </div>
 
             {gameState.timerSeconds && (
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-violet-500/10 border border-violet-500/20 rounded-lg text-sm text-violet-400">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-accent-surface border border-accent-border rounded-lg text-sm text-accent-fg">
                 <Timer size={14} />
                 <span>{gameState.timerSeconds}s per round</span>
               </div>
@@ -251,8 +278,8 @@ export default function GamePage({
         {gameState.phase === "playing" && (
           <div className="space-y-6">
             {gameState.you.secretNumber && (
-              <div className="flex items-center justify-center gap-3 p-2.5 bg-violet-500/10 border border-violet-500/20 rounded-xl">
-                <div className="flex items-center gap-1.5 text-xs text-violet-400">
+              <div className="flex items-center justify-center gap-3 p-2.5 bg-accent-surface border border-accent-border rounded-xl">
+                <div className="flex items-center gap-1.5 text-xs text-accent-fg">
                   <Lock size={12} />
                   <span className="font-medium">Your number</span>
                 </div>
@@ -260,7 +287,7 @@ export default function GamePage({
                   {gameState.you.secretNumber.split("").map((d, i) => (
                     <span
                       key={i}
-                      className="w-7 h-7 flex items-center justify-center text-sm font-bold rounded bg-violet-500/20 text-violet-300"
+                      className="w-7 h-7 flex items-center justify-center text-sm font-bold rounded bg-accent-surface-hover text-accent-soft"
                     >
                       {d}
                     </span>
@@ -271,7 +298,7 @@ export default function GamePage({
 
             <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-input-bg rounded-xl border border-border gap-2">
               <div className="flex items-center gap-2">
-                <Swords size={16} className="text-violet-400" />
+                <Swords size={16} className="text-accent-fg" />
                 <span className="text-sm text-text-secondary">Round {gameState.round}</span>
               </div>
               {gameState.opponent && (
@@ -288,7 +315,7 @@ export default function GamePage({
                   </span>
                   {gameState.opponent.hasGuessedThisRound && (
                     <span className="px-2 py-0.5 bg-amber-500/20 text-amber-600 dark:text-amber-300 text-xs rounded-full">
-                      submitted
+                      Submitted
                     </span>
                   )}
                 </div>
@@ -297,7 +324,7 @@ export default function GamePage({
 
             {waitingForOpponent || gameState.you.hasGuessedThisRound ? (
               <div className="text-center py-6 space-y-3">
-                <Loader2 size={24} className="text-violet-400 animate-spin mx-auto" />
+                <Loader2 size={24} className="text-accent-fg animate-spin mx-auto" />
                 <p className="text-text-secondary">
                   Waiting for{" "}
                   <span className="text-text-primary font-medium">
@@ -335,6 +362,10 @@ export default function GamePage({
           />
         )}
       </div>
+
+      <footer className="text-center py-6 text-text-muted text-xs flex items-center justify-center gap-1">
+        developed with <Heart size={12} className="text-red-400 fill-red-400" /> by luxy & cursor
+      </footer>
 
       <Notepad gameId={gameId} open={notepadOpen} onClose={() => setNotepadOpen(false)} />
     </main>

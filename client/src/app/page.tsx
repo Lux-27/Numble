@@ -6,7 +6,7 @@ import { useGame } from "@/lib/useGame";
 import { PlayerSetup } from "@/components/PlayerSetup";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { IconName } from "@/lib/icons";
-import { Hash, Users, ArrowRight, Timer } from "lucide-react";
+import { Hash, Users, ArrowRight, Timer, Heart } from "lucide-react";
 
 type Mode = "home" | "create" | "join";
 
@@ -67,7 +67,7 @@ export default function HomePage() {
                   aria-checked={timerEnabled}
                   onClick={() => setTimerEnabled((v) => !v)}
                   className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer ${
-                    timerEnabled ? "bg-violet-600" : "bg-surface-tertiary"
+                    timerEnabled ? "bg-accent" : "bg-surface-tertiary"
                   }`}
                 >
                   <span
@@ -88,7 +88,7 @@ export default function HomePage() {
                       const v = parseInt(e.target.value, 10);
                       if (!isNaN(v)) setTimerSeconds(Math.min(120, Math.max(10, v)));
                     }}
-                    className="w-20 px-3 py-2 bg-surface border border-border rounded-lg text-text-primary text-sm text-center focus:outline-none focus:ring-2 focus:ring-violet-500"
+                    className="w-20 px-3 py-2 bg-surface border border-border rounded-lg text-text-primary text-sm text-center focus:outline-none focus:ring-2 focus:ring-accent"
                   />
                   <span className="text-sm text-text-secondary">seconds per round</span>
                 </div>
@@ -138,13 +138,13 @@ export default function HomePage() {
                   value={joinCode}
                   onChange={(e) => setJoinCode(e.target.value)}
                   placeholder="Enter game code..."
-                  className="w-full px-4 py-3 bg-input-bg border border-border rounded-xl text-text-primary placeholder-placeholder focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 bg-input-bg border border-border rounded-xl text-text-primary placeholder-placeholder focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
                 />
               </div>
               <button
                 type="submit"
                 disabled={!joinCode.trim()}
-                className="w-full py-3 px-6 bg-violet-600 hover:bg-violet-500 disabled:bg-disabled-bg disabled:text-disabled-text text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 disabled:cursor-not-allowed cursor-pointer"
+                className="w-full py-3 px-6 bg-accent hover:bg-accent-hover disabled:bg-disabled-bg disabled:text-disabled-text text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 disabled:cursor-not-allowed cursor-pointer"
               >
                 Next <ArrowRight size={18} />
               </button>
@@ -170,7 +170,7 @@ export default function HomePage() {
       <div className="w-full max-w-lg text-center space-y-12">
         <div className="space-y-4">
           <div className="flex items-center justify-center gap-3">
-            <div className="w-14 h-14 bg-violet-600 rounded-2xl flex items-center justify-center">
+            <div className="w-14 h-14 bg-accent rounded-2xl flex items-center justify-center">
               <Hash size={28} className="text-white" />
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function HomePage() {
         <div className="flex flex-col gap-4 max-w-xs mx-auto">
           <button
             onClick={() => setMode("create")}
-            className="py-4 px-6 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-3 text-lg cursor-pointer"
+            className="py-4 px-6 bg-accent hover:bg-accent-hover text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-3 text-lg cursor-pointer"
           >
             <Users size={22} />
             Create Game
@@ -203,6 +203,10 @@ export default function HomePage() {
         <div className="text-text-muted text-sm">
           <p>Guess the digits. Beat your opponent.</p>
         </div>
+      </div>
+
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-text-muted text-xs flex items-center gap-1">
+        developed with <Heart size={12} className="text-red-400 fill-red-400" /> by luxy & cursor
       </div>
     </main>
   );

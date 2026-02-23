@@ -43,7 +43,7 @@ export function PlayerSetup({ title, subtitle, onSubmit, submitLabel, children }
           onChange={(e) => setName(e.target.value)}
           placeholder="Enter your name..."
           maxLength={20}
-          className="w-full px-4 py-3 bg-input-bg border border-border rounded-xl text-text-primary placeholder-placeholder focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
+          className="w-full px-4 py-3 bg-input-bg border border-border rounded-xl text-text-primary placeholder-placeholder focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
         />
       </div>
 
@@ -59,7 +59,7 @@ export function PlayerSetup({ title, subtitle, onSubmit, submitLabel, children }
       <button
         type="submit"
         disabled={!canSubmit}
-        className="w-full py-3 px-6 bg-violet-600 hover:bg-violet-500 disabled:bg-disabled-bg disabled:text-disabled-text text-white font-semibold rounded-xl transition-all duration-200 disabled:cursor-not-allowed cursor-pointer"
+        className="w-full py-3 px-6 bg-accent hover:bg-accent-hover disabled:bg-disabled-bg disabled:text-disabled-text text-white font-semibold rounded-xl transition-all duration-200 disabled:cursor-not-allowed cursor-pointer"
       >
         {submitLabel}
       </button>

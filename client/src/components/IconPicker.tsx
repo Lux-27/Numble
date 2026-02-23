@@ -34,7 +34,7 @@ export function IconPicker({ selected, onSelect }: IconPickerProps) {
           onClick={() => onSelect(iconName)}
           className={`flex items-center justify-center p-3 rounded-xl transition-all duration-200 cursor-pointer ${
             selected === iconName
-              ? "bg-violet-500/30 ring-2 ring-violet-400 scale-110"
+              ? "bg-accent-surface-active ring-2 ring-accent-fg scale-110"
               : "bg-input-bg hover:bg-surface-tertiary hover:scale-105"
           }`}
         >
@@ -42,7 +42,7 @@ export function IconPicker({ selected, onSelect }: IconPickerProps) {
             name={iconName}
             size={24}
             className={
-              selected === iconName ? "text-violet-300" : "text-text-secondary"
+              selected === iconName ? "text-accent-soft" : "text-text-secondary"
             }
           />
         </button>

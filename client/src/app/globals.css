@@ -36,6 +36,78 @@
   --color-placeholder: #71717a;
 }
 
+:root, [data-accent="violet"] {
+  --color-accent: #7c3aed;
+  --color-accent-hover: #8b5cf6;
+  --color-accent-fg: #a78bfa;
+  --color-accent-soft: #c4b5fd;
+  --color-accent-surface: rgba(139, 92, 246, 0.1);
+  --color-accent-surface-hover: rgba(139, 92, 246, 0.2);
+  --color-accent-surface-active: rgba(139, 92, 246, 0.3);
+  --color-accent-border: rgba(139, 92, 246, 0.2);
+  --color-accent-ring: rgba(139, 92, 246, 0.3);
+}
+
+[data-accent="blue"] {
+  --color-accent: #2563eb;
+  --color-accent-hover: #3b82f6;
+  --color-accent-fg: #60a5fa;
+  --color-accent-soft: #93c5fd;
+  --color-accent-surface: rgba(59, 130, 246, 0.1);
+  --color-accent-surface-hover: rgba(59, 130, 246, 0.2);
+  --color-accent-surface-active: rgba(59, 130, 246, 0.3);
+  --color-accent-border: rgba(59, 130, 246, 0.2);
+  --color-accent-ring: rgba(59, 130, 246, 0.3);
+}
+
+[data-accent="emerald"] {
+  --color-accent: #059669;
+  --color-accent-hover: #10b981;
+  --color-accent-fg: #34d399;
+  --color-accent-soft: #6ee7b7;
+  --color-accent-surface: rgba(16, 185, 129, 0.1);
+  --color-accent-surface-hover: rgba(16, 185, 129, 0.2);
+  --color-accent-surface-active: rgba(16, 185, 129, 0.3);
+  --color-accent-border: rgba(16, 185, 129, 0.2);
+  --color-accent-ring: rgba(16, 185, 129, 0.3);
+}
+
+[data-accent="amber"] {
+  --color-accent: #d97706;
+  --color-accent-hover: #f59e0b;
+  --color-accent-fg: #fbbf24;
+  --color-accent-soft: #fcd34d;
+  --color-accent-surface: rgba(245, 158, 11, 0.1);
+  --color-accent-surface-hover: rgba(245, 158, 11, 0.2);
+  --color-accent-surface-active: rgba(245, 158, 11, 0.3);
+  --color-accent-border: rgba(245, 158, 11, 0.2);
+  --color-accent-ring: rgba(245, 158, 11, 0.3);
+}
+
+[data-accent="rose"] {
+  --color-accent: #e11d48;
+  --color-accent-hover: #f43f5e;
+  --color-accent-fg: #fb7185;
+  --color-accent-soft: #fda4af;
+  --color-accent-surface: rgba(244, 63, 94, 0.1);
+  --color-accent-surface-hover: rgba(244, 63, 94, 0.2);
+  --color-accent-surface-active: rgba(244, 63, 94, 0.3);
+  --color-accent-border: rgba(244, 63, 94, 0.2);
+  --color-accent-ring: rgba(244, 63, 94, 0.3);
+}
+
+[data-accent="orange"] {
+  --color-accent: #ea580c;
+  --color-accent-hover: #f97316;
+  --color-accent-fg: #fb923c;
+  --color-accent-soft: #fdba74;
+  --color-accent-surface: rgba(249, 115, 22, 0.1);
+  --color-accent-surface-hover: rgba(249, 115, 22, 0.2);
+  --color-accent-surface-active: rgba(249, 115, 22, 0.3);
+  --color-accent-border: rgba(249, 115, 22, 0.2);
+  --color-accent-ring: rgba(249, 115, 22, 0.3);
+}
+
 @theme inline {
   --color-surface: var(--color-surface);
   --color-surface-secondary: var(--color-surface-secondary);
@@ -52,6 +124,16 @@
   --color-disabled-bg: var(--color-disabled-bg);
   --color-disabled-text: var(--color-disabled-text);
   --color-placeholder: var(--color-placeholder);
+
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-fg: var(--color-accent-fg);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-accent-surface: var(--color-accent-surface);
+  --color-accent-surface-hover: var(--color-accent-surface-hover);
+  --color-accent-surface-active: var(--color-accent-surface-active);
+  --color-accent-border: var(--color-accent-border);
+  --color-accent-ring: var(--color-accent-ring);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);

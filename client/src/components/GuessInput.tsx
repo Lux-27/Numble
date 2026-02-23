@@ -78,7 +78,7 @@ export function GuessInput({ onSubmit, disabled, round, deadline, timerSeconds }
               onChange={(e) => handleChange(i, e.target.value)}
               onKeyDown={(e) => handleKeyDown(i, e)}
               disabled={disabled}
-              className="w-12 h-14 sm:w-14 sm:h-16 text-center text-xl sm:text-2xl font-bold bg-input-bg border-2 border-border rounded-lg text-text-primary focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 transition-all disabled:opacity-50"
+              className="w-12 h-14 sm:w-14 sm:h-16 text-center text-xl sm:text-2xl font-bold bg-input-bg border-2 border-border rounded-lg text-text-primary focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-ring transition-all disabled:opacity-50"
             />
           ))}
         </div>
@@ -86,7 +86,7 @@ export function GuessInput({ onSubmit, disabled, round, deadline, timerSeconds }
         <button
           type="submit"
           disabled={!isComplete || disabled}
-          className="w-12 h-14 sm:w-14 sm:h-16 flex items-center justify-center bg-violet-600 hover:bg-violet-500 disabled:bg-disabled-bg disabled:text-disabled-text text-white rounded-lg transition-all duration-200 disabled:cursor-not-allowed cursor-pointer"
+          className="w-12 h-14 sm:w-14 sm:h-16 flex items-center justify-center bg-accent hover:bg-accent-hover disabled:bg-disabled-bg disabled:text-disabled-text text-white rounded-lg transition-all duration-200 disabled:cursor-not-allowed cursor-pointer"
         >
           <Send size={20} />
         </button>

@@ -47,7 +47,7 @@ export function GameOverModal({ data, yourId, onRematch }: GameOverModalProps) {
             <div
               key={id}
               className={`flex items-center justify-between p-3 rounded-xl ${
-                id === yourId ? "bg-violet-500/10 border border-violet-500/20" : "bg-input-bg"
+                id === yourId ? "bg-accent-surface border border-accent-border" : "bg-input-bg"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -75,7 +75,7 @@ export function GameOverModal({ data, yourId, onRematch }: GameOverModalProps) {
 
         <button
           onClick={onRematch}
-          className="w-full py-3 px-6 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full py-3 px-6 bg-accent hover:bg-accent-hover text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
         >
           <RotateCcw size={18} />
           Rematch

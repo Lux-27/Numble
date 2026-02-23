@@ -52,7 +52,7 @@ export function SecretNumberInput({ onSubmit, disabled }: SecretNumberInputProps
   return (
     <form onSubmit={handleSubmit} className="space-y-6 text-center">
       <div className="space-y-2">
-        <div className="flex items-center justify-center gap-2 text-violet-400">
+        <div className="flex items-center justify-center gap-2 text-accent-fg">
           <Lock size={20} />
           <h3 className="text-lg font-semibold">Set Your Secret Number</h3>
         </div>
@@ -73,7 +73,7 @@ export function SecretNumberInput({ onSubmit, disabled }: SecretNumberInputProps
             onChange={(e) => handleChange(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
             disabled={disabled}
-            className="w-14 h-16 sm:w-16 sm:h-20 text-center text-2xl sm:text-3xl font-bold bg-input-bg border-2 border-border rounded-xl text-text-primary focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 transition-all disabled:opacity-50"
+            className="w-14 h-16 sm:w-16 sm:h-20 text-center text-2xl sm:text-3xl font-bold bg-input-bg border-2 border-border rounded-xl text-text-primary focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-ring transition-all disabled:opacity-50"
           />
         ))}
       </div>
@@ -81,7 +81,7 @@ export function SecretNumberInput({ onSubmit, disabled }: SecretNumberInputProps
       <button
         type="submit"
         disabled={!isComplete || disabled}
-        className="px-8 py-3 bg-violet-600 hover:bg-violet-500 disabled:bg-disabled-bg disabled:text-disabled-text text-white font-semibold rounded-xl transition-all duration-200 disabled:cursor-not-allowed cursor-pointer"
+        className="px-8 py-3 bg-accent hover:bg-accent-hover disabled:bg-disabled-bg disabled:text-disabled-text text-white font-semibold rounded-xl transition-all duration-200 disabled:cursor-not-allowed cursor-pointer"
       >
         Lock In Number
       </button>

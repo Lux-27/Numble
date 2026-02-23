@@ -28,8 +28,8 @@ export function TimerBar({ deadline, duration }: TimerBarProps) {
   const fraction = remaining / duration;
   const seconds = Math.ceil(remaining);
 
-  let barColor = "bg-violet-500";
-  let textColor = "text-violet-400";
+  let barColor = "bg-accent-hover";
+  let textColor = "text-accent-fg";
   if (remaining < 5) {
     barColor = "bg-red-500";
     textColor = "text-red-400";

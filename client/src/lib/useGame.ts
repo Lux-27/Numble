@@ -41,7 +41,9 @@ function initSocketListeners(): void {
 
   socket.on("error", (data: { message: string }) => {
     updateStore({ error: data.message });
-    setTimeout(() => updateStore({ error: null }), 4000);
+    if (getStore().gameState) {
+      setTimeout(() => updateStore({ error: null }), 4000);
+    }
   });
 }
 
