@@ -1,0 +1,28 @@
+export const AVAILABLE_ICONS = [
+  "Smile",
+  "Cat",
+  "Dog",
+  "Bird",
+  "Fish",
+  "Bug",
+  "Flame",
+  "Zap",
+  "Star",
+  "Heart",
+  "Moon",
+  "Sun",
+  "Cloud",
+  "Snowflake",
+  "Leaf",
+  "Flower2",
+  "Ghost",
+  "Skull",
+  "Crown",
+  "Gem",
+  "Rocket",
+  "Gamepad2",
+  "Music",
+  "Pizza",
+] as const;
+
+export type IconName = (typeof AVAILABLE_ICONS)[number];

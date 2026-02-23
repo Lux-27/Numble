@@ -1,0 +1,167 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useGame } from "@/lib/useGame";
+import { PlayerSetup } from "@/components/PlayerSetup";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { IconName } from "@/lib/icons";
+import { Hash, Users, ArrowRight } from "lucide-react";
+
+type Mode = "home" | "create" | "join";
+
+export default function HomePage() {
+  const [mode, setMode] = useState<Mode>("home");
+  const [joinCode, setJoinCode] = useState("");
+  const [joinStep, setJoinStep] = useState<"code" | "setup">("code");
+  const router = useRouter();
+  const { createGame, joinGame } = useGame();
+
+  async function handleCreate(name: string, icon: IconName) {
+    const gameId = await createGame(name, icon);
+    router.push(`/game/${gameId}`);
+  }
+
+  function handleJoinCodeSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (joinCode.trim()) {
+      setJoinStep("setup");
+    }
+  }
+
+  function handleJoin(name: string, icon: IconName) {
+    joinGame(joinCode.trim(), name, icon);
+    router.push(`/game/${joinCode.trim()}`);
+  }
+
+  if (mode === "create") {
+    return (
+      <main className="min-h-screen bg-surface flex items-center justify-center p-4">
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
+        <div className="w-full max-w-md space-y-6">
+          <button
+            onClick={() => setMode("home")}
+            className="text-text-secondary hover:text-text-primary transition-colors text-sm cursor-pointer"
+          >
+            &larr; Back
+          </button>
+          <PlayerSetup
+            title="Create a Game"
+            subtitle="Set up your profile and share the link with a friend"
+            onSubmit={handleCreate}
+            submitLabel="Create Game"
+          />
+        </div>
+      </main>
+    );
+  }
+
+  if (mode === "join") {
+    return (
+      <main className="min-h-screen bg-surface flex items-center justify-center p-4">
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
+        <div className="w-full max-w-md space-y-6">
+          <button
+            onClick={() => {
+              if (joinStep === "setup") {
+                setJoinStep("code");
+              } else {
+                setMode("home");
+              }
+            }}
+            className="text-text-secondary hover:text-text-primary transition-colors text-sm cursor-pointer"
+          >
+            &larr; Back
+          </button>
+
+          {joinStep === "code" ? (
+            <form onSubmit={handleJoinCodeSubmit} className="space-y-6">
+              <div className="text-center space-y-2">
+                <h2 className="text-2xl font-bold text-text-primary">Join a Game</h2>
+                <p className="text-text-secondary text-sm">
+                  Enter the game code shared by your friend
+                </p>
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="game-code" className="block text-sm font-medium text-text-secondary">
+                  Game Code
+                </label>
+                <input
+                  id="game-code"
+                  type="text"
+                  value={joinCode}
+                  onChange={(e) => setJoinCode(e.target.value)}
+                  placeholder="Enter game code..."
+                  className="w-full px-4 py-3 bg-input-bg border border-border rounded-xl text-text-primary placeholder-placeholder focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={!joinCode.trim()}
+                className="w-full py-3 px-6 bg-violet-600 hover:bg-violet-500 disabled:bg-disabled-bg disabled:text-disabled-text text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 disabled:cursor-not-allowed cursor-pointer"
+              >
+                Next <ArrowRight size={18} />
+              </button>
+            </form>
+          ) : (
+            <PlayerSetup
+              title="Join Game"
+              subtitle="Set up your profile to join the game"
+              onSubmit={handleJoin}
+              submitLabel="Join Game"
+            />
+          )}
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-surface flex items-center justify-center p-4">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
+      <div className="w-full max-w-lg text-center space-y-12">
+        <div className="space-y-4">
+          <div className="flex items-center justify-center gap-3">
+            <div className="w-14 h-14 bg-violet-600 rounded-2xl flex items-center justify-center">
+              <Hash size={28} className="text-white" />
+            </div>
+          </div>
+          <h1 className="text-5xl font-bold text-text-primary tracking-tight">
+            Numble
+          </h1>
+          <p className="text-text-secondary text-lg max-w-sm mx-auto">
+            A multiplayer number guessing game. Pick a 4-digit number, challenge
+            your friend, and race to crack theirs first.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-4 max-w-xs mx-auto">
+          <button
+            onClick={() => setMode("create")}
+            className="py-4 px-6 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-3 text-lg cursor-pointer"
+          >
+            <Users size={22} />
+            Create Game
+          </button>
+          <button
+            onClick={() => setMode("join")}
+            className="py-4 px-6 bg-input-bg hover:bg-surface-tertiary text-text-primary font-semibold rounded-xl border border-border transition-all duration-200 flex items-center justify-center gap-3 text-lg cursor-pointer"
+          >
+            <ArrowRight size={22} />
+            Join Game
+          </button>
+        </div>
+
+        <div className="text-text-muted text-sm">
+          <p>Guess the digits. Beat your opponent.</p>
+        </div>
+      </div>
+    </main>
+  );
+}
