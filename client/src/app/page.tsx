@@ -78,19 +78,20 @@ export default function HomePage() {
                 </button>
               </label>
               {timerEnabled && (
-                <div className="flex items-center gap-3 pt-1">
-                  <input
-                    type="number"
-                    min={10}
-                    max={120}
-                    value={timerSeconds}
-                    onChange={(e) => {
-                      const v = parseInt(e.target.value, 10);
-                      if (!isNaN(v)) setTimerSeconds(Math.min(120, Math.max(10, v)));
-                    }}
-                    className="w-20 px-3 py-2 bg-surface border border-border rounded-lg text-text-primary text-sm text-center focus:outline-none focus:ring-2 focus:ring-accent"
-                  />
-                  <span className="text-sm text-text-secondary">seconds per round</span>
+                <div className="space-y-2 pt-1">
+                  <span className="text-sm text-text-secondary">Duration</span>
+                  <div className="flex items-center justify-between gap-5">
+                    <input
+                      type="range"
+                      min={10}
+                      max={120}
+                      step={5}
+                      value={timerSeconds}
+                      onChange={(e) => setTimerSeconds(parseInt(e.target.value, 10))}
+                      className="w-full h-2 bg-surface-tertiary rounded-full appearance-none cursor-pointer accent-accent"
+                    />
+                    <span className="text-sm font-medium text-text-primary tabular-nums">{timerSeconds}s</span>
+                  </div>
                 </div>
               )}
             </div>
@@ -206,7 +207,7 @@ export default function HomePage() {
       </div>
 
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-text-muted text-xs flex items-center gap-1">
-        developed with <Heart size={12} className="text-red-400 fill-red-400" /> by luxy & cursor
+        made with <Heart size={12} className="text-red-400 fill-red-400" /> by luxy & cursor
       </div>
     </main>
   );

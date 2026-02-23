@@ -364,7 +364,7 @@ export default function GamePage({
       </div>
 
       <footer className="text-center py-6 text-text-muted text-xs flex items-center justify-center gap-1">
-        developed with <Heart size={12} className="text-red-400 fill-red-400" /> by luxy & cursor
+        made with <Heart size={12} className="text-red-400 fill-red-400" /> by luxy & cursor
       </footer>
 
       <Notepad gameId={gameId} open={notepadOpen} onClose={() => setNotepadOpen(false)} />

@@ -42,7 +42,7 @@ export function IconPicker({ selected, onSelect }: IconPickerProps) {
             name={iconName}
             size={24}
             className={
-              selected === iconName ? "text-accent-soft" : "text-text-secondary"
+              selected === iconName ? "text-accent-fg" : "text-text-secondary"
             }
           />
         </button>
