@@ -9,9 +9,13 @@ const app = express();
 app.use(cors());
 
 const httpServer = createServer(app);
+const allowedOrigins = process.env.CLIENT_URL
+  ? [process.env.CLIENT_URL, "http://localhost:3000"]
+  : ["http://localhost:3000", "http://localhost:3002"];
+
 const io = new Server(httpServer, {
   cors: {
-    origin: ["http://localhost:3000", "http://localhost:3002"],
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
   },
 });
