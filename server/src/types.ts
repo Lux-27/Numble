@@ -32,6 +32,7 @@ export interface GameState {
   players: Map<string, Player>;
   round: number;
   winnerId: string | null;
+  isTie: boolean;
   createdAt: number;
   timerSeconds: number | null;
   roundDeadline: number | null;

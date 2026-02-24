@@ -10,6 +10,7 @@ export class Game {
       players: new Map(),
       round: 1,
       winnerId: null,
+      isTie: false,
       createdAt: Date.now(),
       timerSeconds: timerSeconds && timerSeconds >= 10 && timerSeconds <= 120 ? timerSeconds : null,
       roundDeadline: null,
@@ -109,6 +110,7 @@ export class Game {
 
     if (gameOver) {
       this.state.phase = "game-over";
+      this.state.isTie = isTie;
       this.state.winnerId = isTie ? null : winners[0];
       this.state.roundDeadline = null;
     } else {
@@ -144,6 +146,7 @@ export class Game {
     this.state.phase = "setting-secrets";
     this.state.round = 1;
     this.state.winnerId = null;
+    this.state.isTie = false;
     this.state.roundDeadline = null;
 
     for (const player of this.state.players.values()) {
@@ -197,7 +200,7 @@ export class Game {
       },
       opponent: opponent ? this.getPublicPlayer(opponent.id) : null,
       winnerId: this.state.winnerId,
-      isTie: this.state.winnerId === null && this.state.phase === "game-over",
+      isTie: this.state.isTie,
       timerSeconds: this.state.timerSeconds,
       roundDeadline: this.state.roundDeadline,
     };
@@ -216,7 +219,7 @@ export class Game {
 
     return {
       winnerId: this.state.winnerId,
-      isTie: this.state.winnerId === null,
+      isTie: this.state.isTie,
       players,
     };
   }
